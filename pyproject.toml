@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pexpect-serialspawn"
+version = "0.0.1"
+authors = [
+  { name="Antonio Vázquez Blanco", email="antoniovazquezblanco@gmail.com" },
+]
+description = "Interact with serial devices using pexpect"
+readme = "README.md"
+requires-python = ">=3.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pyserial",
+    "pexpect"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/antoniovazquezblanco/pexpect-serialspawn"
+"Bug Tracker" = "https://github.com/antoniovazquezblanco/pexpect-serialspawn/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pexpect_serialspawn"]
