@@ -3,6 +3,14 @@
 Interact with serial devices using pexpect.
 
 
+## Installation
+
+Just use pip :)
+
+```
+pip install pexpect-serialspawn
+```
+
 ## Usage
 
 ```python
