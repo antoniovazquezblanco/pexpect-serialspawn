@@ -44,7 +44,7 @@ class SerialSpawn(SpawnBase):
         if timeout and timeout < 0:
             timeout = 0
         self.ser.timeout = timeout
-        s = self.ser.read(n)
+        s = self.ser.read(size)
         s = self._decoder.decode(s, final=False)
         self._log(s, 'read')
         return s
