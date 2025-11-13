@@ -1,9 +1,8 @@
 import os
 import sys
-import time
 import threading
 from pexpect.fdpexpect import SpawnBase
-from pexpect.exceptions import EOF, TIMEOUT, ExceptionPexpect
+from pexpect.exceptions import EOF, ExceptionPexpect
 
 PY3 = (sys.version_info[0] >= 3)
 
@@ -11,6 +10,7 @@ PY3 = (sys.version_info[0] >= 3)
 class SerialSpawn(SpawnBase):
     '''This is a serial interface class interface for Pexpect. Use this class to
     control an existing python serial connection. '''
+
     def __init__(self, ser, args=None, **kwargs):
         if not ser.is_open:
             raise ExceptionPexpect('serial port is not ready')
@@ -35,7 +35,7 @@ class SerialSpawn(SpawnBase):
         self._log(s, 'send')
         b = self._encoder.encode(s, final=False)
         return self.ser.write(b)
-    
+
     def read_nonblocking(self, size=1, timeout=-1):
         if not self.isalive():
             raise EOF('End Of File (EOF).')
@@ -87,9 +87,11 @@ class SerialSpawn(SpawnBase):
             escape_character = escape_character.encode('latin-1')
         # Set the interacting event and start the input thread
         self.interacting.set()
-        input_thread = threading.Thread(target=self._interact_input_loop, args=(escape_character, input_filter))
+        input_thread = threading.Thread(
+            target=self._interact_input_loop, args=(escape_character, input_filter))
         input_thread.start()
         # Run output loop in this thread
-        self._interact_output_loop(escape_character, input_filter, output_filter)
+        self._interact_output_loop(
+            escape_character, input_filter, output_filter)
         # Join input thread on exit...
         input_thread.join()
