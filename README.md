@@ -1,11 +1,10 @@
 # Serial spawn for pexpect
 
 [![Build](https://github.com/antoniovazquezblanco/pexpect-serialspawn/actions/workflows/build.yml/badge.svg)](https://github.com/antoniovazquezblanco/pexpect-serialspawn/actions/workflows/build.yml)
+[![PyPI](https://img.shields.io/pypi/v/pexpect-serialspawn)](https://pypi.org/project/pexpect-serialspawn/)
 [![pexpect-serialspawn](https://snyk.io/advisor/python/pexpect-serialspawn/badge.svg)](https://snyk.io/advisor/python/pexpect-serialspawn)
 
-
 Interact with serial devices using pexpect.
-
 
 ## Installation
 
