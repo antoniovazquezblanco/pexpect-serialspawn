@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["pypy3.9", "pypy3.10", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["pypy3.9", "pypy3.10", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - name: Checkout repository
@@ -25,3 +25,30 @@ jobs:
 
       - name: Build
         run: hatch build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: python_${{ matrix.python-version }}
+          path: dist/
+
+
+  publish_pypi:
+    name: Publish to PyPi
+    needs: [build]
+    if: contains(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pexpect-serialspawn
+    permissions:
+      id-token: write
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v6
+      with:
+        name: python_3.13
+        path: dist/
+
+    - name: Publish distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
