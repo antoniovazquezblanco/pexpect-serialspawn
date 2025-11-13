@@ -1,10 +1,9 @@
-import os
-import sys
+#!/usr/bin/env python
+
 import threading
 from pexpect.fdpexpect import SpawnBase
 from pexpect.exceptions import EOF, ExceptionPexpect
-
-PY3 = (sys.version_info[0] >= 3)
+from pexpect_serialspawn.stdin_helpers import read_char
 
 
 class SerialSpawn(SpawnBase):
@@ -54,7 +53,7 @@ class SerialSpawn(SpawnBase):
             if not self.isalive():
                 self.interacting.set()
             try:
-                data = self.read_nonblocking(size=1000)
+                data = self.read_nonblocking()
                 if output_filter:
                     data = output_filter(data)
                 self.write_to_stdout(data)
@@ -64,8 +63,7 @@ class SerialSpawn(SpawnBase):
 
     def _interact_input_loop(self, escape_character=chr(29), input_filter=None):
         while self.interacting.is_set():
-            data = os.read(self.stdin.fileno(), 1000)
-            print(data)
+            data = read_char()
             i = -1
             if escape_character is not None:
                 i = data.rfind(escape_character)
@@ -78,13 +76,12 @@ class SerialSpawn(SpawnBase):
             if data:
                 self.send(data)
 
-    def interact(self, escape_character=chr(29), input_filter=None, output_filter=None):
+    def interact(self, escape_character=chr(0x1b), input_filter=None, output_filter=None):
         # Flush buffer to stdout...
         self.write_to_stdout(self.buffer)
         self.stdout.flush()
         # Fix escape character encoding
-        if escape_character is not None and PY3:
-            escape_character = escape_character.encode('latin-1')
+        escape_character = escape_character.encode('latin-1')
         # Set the interacting event and start the input thread
         self.interacting.set()
         input_thread = threading.Thread(
